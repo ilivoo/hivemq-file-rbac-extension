@@ -23,49 +23,43 @@ import com.hivemq.extension.sdk.api.annotations.Nullable;
 import javax.xml.bind.annotation.*;
 import java.util.List;
 
-
 @XmlType(propOrder = {})
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 public class Role {
 
-    @Nullable
-    @XmlElement(name = "id")
-    private String id;
+    @XmlElement(name = "id", required = true)
+    private @Nullable String id;
 
-    @Nullable
-    @XmlElementWrapper(name = "permissions")
+    @XmlElementWrapper(name = "permissions", required = true)
     @XmlElement(name = "permission")
-    private List<Permission> permissions;
+    private @Nullable List<Permission> permissions;
 
     public Role() {
     }
 
-    public Role(@NotNull final String id, @NotNull final List<Permission> permissions) {
+    public Role(final @NotNull String id, final @NotNull List<Permission> permissions) {
         this.id = id;
         this.permissions = permissions;
     }
 
-    @Nullable
-    public String getId() {
+    public @Nullable String getId() {
         return id;
     }
 
-    public void setId(@NotNull final String id) {
+    public void setId(final @NotNull String id) {
         this.id = id;
     }
 
-    @Nullable
-    public List<Permission> getPermissions() {
+    public @Nullable List<Permission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(@NotNull final List<Permission> permissions) {
+    public void setPermissions(final @NotNull List<Permission> permissions) {
         this.permissions = permissions;
     }
 
-    @NotNull
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "Role{" +
                 "id='" + id + '\'' +
                 ", permissions=" + permissions +

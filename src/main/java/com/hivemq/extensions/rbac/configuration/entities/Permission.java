@@ -26,43 +26,36 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 @XmlType(propOrder = {})
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 public class Permission {
 
-    @Nullable
     @XmlElement(name = "topic", required = true)
-    private String topic;
+    private @Nullable String topic;
 
-    @NotNull
     @XmlElement(name = "activity", defaultValue = "ALL")
-    private TopicPermission.MqttActivity activity = TopicPermission.MqttActivity.ALL;
+    private @NotNull TopicPermission.MqttActivity activity = TopicPermission.MqttActivity.ALL;
 
-    @NotNull
     @XmlElement(name = "qos", defaultValue = "ALL")
-    private TopicPermission.Qos qos = TopicPermission.Qos.ALL;
+    private @NotNull TopicPermission.Qos qos = TopicPermission.Qos.ALL;
 
-    @NotNull
     @XmlElement(name = "retain", defaultValue = "ALL")
-    private TopicPermission.Retain retain = TopicPermission.Retain.ALL;
+    private @NotNull TopicPermission.Retain retain = TopicPermission.Retain.ALL;
 
-    @NotNull
     @XmlElement(name = "shared-subscription", defaultValue = "ALL")
-    private TopicPermission.SharedSubscription sharedSubscription = TopicPermission.SharedSubscription.ALL;
+    private @NotNull TopicPermission.SharedSubscription sharedSubscription = TopicPermission.SharedSubscription.ALL;
 
-    @NotNull
     @XmlElement(name = "shared-group", defaultValue = "#")
-    private String sharedGroup = "#";
+    private @NotNull String sharedGroup = "#";
 
     public Permission() {
     }
 
-    public Permission(@Nullable final String topic) {
+    public Permission(final @Nullable String topic) {
         this.topic = topic;
     }
 
-    public Permission(@NotNull final String topic, @NotNull final TopicPermission.MqttActivity activity, @NotNull final TopicPermission.Qos qos, @NotNull final TopicPermission.Retain retain, @NotNull final TopicPermission.SharedSubscription sharedSubscription, @NotNull final String sharedGroup) {
+    public Permission(final @NotNull String topic, final @NotNull TopicPermission.MqttActivity activity, final @NotNull TopicPermission.Qos qos, final @NotNull TopicPermission.Retain retain, final @NotNull TopicPermission.SharedSubscription sharedSubscription, final @NotNull String sharedGroup) {
         this.topic = topic;
         this.activity = activity;
         this.qos = qos;
@@ -71,63 +64,56 @@ public class Permission {
         this.sharedGroup = sharedGroup;
     }
 
-    @Nullable
-    public String getTopic() {
+    public @Nullable String getTopic() {
         return topic;
     }
 
-    public void setTopic(@NotNull final String topic) {
+    public void setTopic(final @NotNull String topic) {
         this.topic = topic;
     }
 
-    @NotNull
-    public TopicPermission.MqttActivity getActivity() {
+    public @NotNull TopicPermission.MqttActivity getActivity() {
         return activity;
     }
 
-    public void setActivity(@NotNull final TopicPermission.MqttActivity activity) {
+    public void setActivity(final @NotNull TopicPermission.MqttActivity activity) {
         this.activity = activity;
     }
 
-    @NotNull
-    public TopicPermission.Qos getQos() {
+    public @NotNull TopicPermission.Qos getQos() {
         return qos;
     }
 
-    public void setQos(@NotNull final TopicPermission.Qos qos) {
+    public void setQos(final @NotNull TopicPermission.Qos qos) {
         this.qos = qos;
     }
 
-    @NotNull
-    public TopicPermission.Retain getRetain() {
+    public @NotNull TopicPermission.Retain getRetain() {
         return retain;
     }
 
-    public void setRetain(@NotNull final TopicPermission.Retain retain) {
+    public void setRetain(final @NotNull TopicPermission.Retain retain) {
         this.retain = retain;
     }
 
-    @NotNull
-    public TopicPermission.SharedSubscription getSharedSubscription() {
+    public @NotNull TopicPermission.SharedSubscription getSharedSubscription() {
         return sharedSubscription;
     }
 
-    public void setSharedSubscription(@NotNull final TopicPermission.SharedSubscription sharedSubscription) {
+    public void setSharedSubscription(final @NotNull TopicPermission.SharedSubscription sharedSubscription) {
         this.sharedSubscription = sharedSubscription;
     }
 
-    @NotNull
-    public String getSharedGroup() {
+    public @NotNull String getSharedGroup() {
         return sharedGroup;
     }
 
-    public void setSharedGroup(@NotNull final String sharedGroup) {
+    public void setSharedGroup(final @NotNull String sharedGroup) {
         this.sharedGroup = sharedGroup;
     }
 
-    @NotNull
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "Permission{" +
                 "topic='" + topic + '\'' +
                 ", activity=" + activity +

@@ -32,22 +32,22 @@ import java.util.Optional;
 
 public class FileAuthAuthenticator implements SimpleAuthenticator {
 
-    private final @NotNull
-    CredentialsValidator credentialsValidator;
+    private final @NotNull CredentialsValidator credentialsValidator;
 
     FileAuthAuthenticator(final @NotNull CredentialsValidator credentialsValidator) {
         this.credentialsValidator = credentialsValidator;
     }
 
     @Override
-    public void onConnect(@NotNull final SimpleAuthInput simpleAuthInput, @NotNull final SimpleAuthOutput simpleAuthOutput) {
+    public void onConnect(
+            final @NotNull SimpleAuthInput simpleAuthInput, final @NotNull SimpleAuthOutput simpleAuthOutput) {
 
         final Optional<String> userNameOptional = simpleAuthInput.getConnectPacket().getUserName();
         final Optional<ByteBuffer> passwordOptional = simpleAuthInput.getConnectPacket().getPassword();
         final String clientId = simpleAuthInput.getClientInformation().getClientId();
 
         //check if username and password are present
-        if (!userNameOptional.isPresent() || !passwordOptional.isPresent()) {
+        if (userNameOptional.isEmpty() || passwordOptional.isEmpty()) {
             //client is not authenticated
             simpleAuthOutput.failAuthentication(ConnackReasonCode.BAD_USER_NAME_OR_PASSWORD, "Authentication failed because username or password are missing");
             return;

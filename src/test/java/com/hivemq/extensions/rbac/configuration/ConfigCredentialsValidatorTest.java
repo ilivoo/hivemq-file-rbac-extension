@@ -42,7 +42,7 @@ public class ConfigCredentialsValidatorTest {
 
         assertFalse(result.isValidationSuccessful());
 
-        checkErrorString(result, "No Roles found in configuration file");
+        checkErrorString(result, "No roles found in configuration file");
     }
 
     @Test
@@ -58,7 +58,7 @@ public class ConfigCredentialsValidatorTest {
 
         assertFalse(result.isValidationSuccessful());
 
-        checkErrorString(result, "No Roles found in configuration file");
+        checkErrorString(result, "No roles found in configuration file");
     }
 
     @Test
@@ -73,7 +73,7 @@ public class ConfigCredentialsValidatorTest {
         final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
 
         assertFalse(result.isValidationSuccessful());
-        checkErrorString(result, "No Users found in configuration file");
+        checkErrorString(result, "No users or default role found in configuration file");
     }
 
     @Test
@@ -88,7 +88,7 @@ public class ConfigCredentialsValidatorTest {
         final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
 
         assertFalse(result.isValidationSuccessful());
-        checkErrorString(result, "No Users found in configuration file");
+        checkErrorString(result, "No users or default role found in configuration file");
     }
 
     @Test
@@ -103,7 +103,7 @@ public class ConfigCredentialsValidatorTest {
         final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
 
         assertFalse(result.isValidationSuccessful());
-        checkErrorString(result, "A Role is missing an ID");
+        checkErrorString(result, "A role is missing an ID");
     }
 
     @Test
@@ -118,7 +118,7 @@ public class ConfigCredentialsValidatorTest {
         final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
 
         assertFalse(result.isValidationSuccessful());
-        checkErrorString(result, "A Role is missing an ID");
+        checkErrorString(result, "A role is missing an ID");
     }
 
     @Test
@@ -193,7 +193,7 @@ public class ConfigCredentialsValidatorTest {
         final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
 
         assertFalse(result.isValidationSuccessful());
-        checkErrorString(result, "A Permission for role with id '1' is missing a topic filter");
+        checkErrorString(result, "A permission for role with id '1' is missing a topic filter");
     }
 
     @Test
@@ -213,7 +213,7 @@ public class ConfigCredentialsValidatorTest {
         final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
 
         assertFalse(result.isValidationSuccessful());
-        checkErrorString(result, "Invalid value for Activity in Permission for role with id '1'");
+        checkErrorString(result, "Invalid value for activity in permission for role with id '1'");
     }
 
     @Test
@@ -233,7 +233,7 @@ public class ConfigCredentialsValidatorTest {
         final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
 
         assertFalse(result.isValidationSuccessful());
-        checkErrorString(result, "Invalid value for QoS in Permission for role with id '1'");
+        checkErrorString(result, "Invalid value for QoS in permission for role with id '1'");
     }
 
     @Test
@@ -253,7 +253,7 @@ public class ConfigCredentialsValidatorTest {
         final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
 
         assertFalse(result.isValidationSuccessful());
-        checkErrorString(result, "Invalid value for Retain in Permission for role with id '1'");
+        checkErrorString(result, "Invalid value for retain in permission for role with id '1'");
     }
 
     @Test
@@ -273,7 +273,7 @@ public class ConfigCredentialsValidatorTest {
         final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
 
         assertFalse(result.isValidationSuccessful());
-        checkErrorString(result, "Invalid value for Shared Group in Permission for role with id '1'");
+        checkErrorString(result, "Invalid value for shared group in permission for role with id '1'");
     }
 
     @Test
@@ -293,7 +293,7 @@ public class ConfigCredentialsValidatorTest {
         final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
 
         assertFalse(result.isValidationSuccessful());
-        checkErrorString(result, "Invalid value for Shared Subscription in Permission for role with id '1'");
+        checkErrorString(result, "Invalid value for shared subscription in permission for role with id '1'");
     }
 
     @Test
@@ -309,7 +309,7 @@ public class ConfigCredentialsValidatorTest {
         final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
 
         assertFalse(result.isValidationSuccessful());
-        checkErrorString(result, "A User is missing a name");
+        checkErrorString(result, "A user is missing a name");
     }
 
     @Test
@@ -343,7 +343,7 @@ public class ConfigCredentialsValidatorTest {
         final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
 
         assertFalse(result.isValidationSuccessful());
-        checkErrorString(result, "Duplicate Name 'user1' for user");
+        checkErrorString(result, "Duplicate name 'user1' for user");
     }
 
     @Test

@@ -27,21 +27,22 @@ import java.util.Set;
 
 public class ConfigCredentialsValidator {
 
-    @NotNull
-    public static ValidationResult validateConfig(@NotNull final ExtensionConfig extensionConfig, @NotNull final FileAuthConfig config) {
+    public static @NotNull ValidationResult validateConfig(
+            final @NotNull ExtensionConfig extensionConfig, final @NotNull FileAuthConfig config) {
 
         final List<String> errors = new ArrayList<>();
         boolean validationSuccessful = true;
 
+        final String defaultRole = config.getDefaultRole();
         final List<User> users = config.getUsers();
-        final List<Role> roles = config.getRoles();
-        if (users == null || users.isEmpty()) {
-            errors.add("No Users found in configuration file");
+        if ((defaultRole == null || defaultRole.isEmpty()) && (users == null || users.isEmpty())) {
+            errors.add("No users or default role found in configuration file");
             validationSuccessful = false;
         }
 
+        final List<Role> roles = config.getRoles();
         if (roles == null || roles.isEmpty()) {
-            errors.add("No Roles found in configuration file");
+            errors.add("No roles found in configuration file");
             validationSuccessful = false;
         }
 
@@ -50,11 +51,11 @@ public class ConfigCredentialsValidator {
             return new ValidationResult(errors, false);
         }
 
-        Set<String> roleIds = new HashSet<>();
+        final Set<String> roleIds = new HashSet<>();
 
-        for (Role role : roles) {
+        for (final Role role : roles) {
             if (role.getId() == null || role.getId().isEmpty()) {
-                errors.add("A Role is missing an ID");
+                errors.add("A role is missing an ID");
                 validationSuccessful = false;
                 continue;
             }
@@ -73,50 +74,50 @@ public class ConfigCredentialsValidator {
                 continue;
             }
 
-            for (Permission permission : role.getPermissions()) {
+            for (final Permission permission : role.getPermissions()) {
                 if (permission.getTopic() == null || permission.getTopic().isEmpty()) {
-                    errors.add("A Permission for role with id '" + role.getId() + "' is missing a topic filter");
+                    errors.add("A permission for role with id '" + role.getId() + "' is missing a topic filter");
                     validationSuccessful = false;
                 }
 
                 if (permission.getActivity() == null) {
-                    errors.add("Invalid value for Activity in Permission for role with id '" + role.getId() + "'");
+                    errors.add("Invalid value for activity in permission for role with id '" + role.getId() + "'");
                     validationSuccessful = false;
                 }
 
                 if (permission.getQos() == null) {
-                    errors.add("Invalid value for QoS in Permission for role with id '" + role.getId() + "'");
+                    errors.add("Invalid value for QoS in permission for role with id '" + role.getId() + "'");
                     validationSuccessful = false;
                 }
 
                 if (permission.getRetain() == null) {
-                    errors.add("Invalid value for Retain in Permission for role with id '" + role.getId() + "'");
+                    errors.add("Invalid value for retain in permission for role with id '" + role.getId() + "'");
                     validationSuccessful = false;
                 }
 
                 if (permission.getSharedGroup() == null || permission.getSharedGroup().isEmpty()) {
-                    errors.add("Invalid value for Shared Group in Permission for role with id '" + role.getId() + "'");
+                    errors.add("Invalid value for shared group in permission for role with id '" + role.getId() + "'");
                     validationSuccessful = false;
                 }
 
                 if (permission.getSharedSubscription() == null) {
-                    errors.add("Invalid value for Shared Subscription in Permission for role with id '" + role.getId() + "'");
+                    errors.add("Invalid value for shared subscription in permission for role with id '" + role.getId() + "'");
                     validationSuccessful = false;
                 }
             }
         }
 
-        Set<String> userNames = new HashSet<>();
+        final Set<String> userNames = new HashSet<>();
 
-        for (User user : users) {
+        for (final User user : users) {
             if (user.getName() == null || user.getName().isEmpty()) {
-                errors.add("A User is missing a name");
+                errors.add("A user is missing a name");
                 validationSuccessful = false;
                 continue;
             }
 
             if (userNames.contains(user.getName())) {
-                errors.add("Duplicate Name '" + user.getName() + "' for user");
+                errors.add("Duplicate name '" + user.getName() + "' for user");
                 validationSuccessful = false;
                 continue;
             }
@@ -147,7 +148,7 @@ public class ConfigCredentialsValidator {
                 continue;
             }
 
-            for (String role : user.getRoles()) {
+            for (final String role : user.getRoles()) {
                 if (role == null || role.isEmpty()) {
                     errors.add("Invalid role for user '" + user.getName() + "'");
                     validationSuccessful = false;
@@ -168,13 +169,12 @@ public class ConfigCredentialsValidator {
         private final @NotNull List<String> errors;
         private final boolean validationSuccessful;
 
-        private ValidationResult(@NotNull final List<String> errors, final boolean validationSuccessful) {
+        private ValidationResult(final @NotNull List<String> errors, final boolean validationSuccessful) {
             this.errors = errors;
             this.validationSuccessful = validationSuccessful;
         }
 
-        @NotNull
-        public List<String> getErrors() {
+        public @NotNull List<String> getErrors() {
             return errors;
         }
 

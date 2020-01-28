@@ -23,32 +23,44 @@ import com.hivemq.extension.sdk.api.annotations.Nullable;
 import javax.xml.bind.annotation.*;
 import java.util.List;
 
-
 @XmlRootElement(name = "file-rbac")
 @XmlType(propOrder = {})
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 public class FileAuthConfig {
 
-    @Nullable
+    @XmlElement(name = "default-role")
+    private @Nullable String defaultRole;
+
     @XmlElementWrapper(name = "users")
     @XmlElement(name = "user")
-    private List<User> users;
+    private @Nullable List<User> users;
 
-    @Nullable
     @XmlElementWrapper(name = "roles")
     @XmlElement(name = "role")
-    private List<Role> roles;
+    private @Nullable List<Role> roles;
 
     public FileAuthConfig() {
     }
 
-    public FileAuthConfig(final @Nullable List<User> users, final @Nullable List<Role> roles) {
+    public FileAuthConfig(
+            final @Nullable String defaultRole,
+            final @Nullable List<User> users,
+            final @Nullable List<Role> roles) {
+
+        this.defaultRole = defaultRole;
         this.users = users;
         this.roles = roles;
     }
 
-    @Nullable
-    public List<User> getUsers() {
+    public @Nullable String getDefaultRole() {
+        return defaultRole;
+    }
+
+    public void setDefaultRole(final @Nullable String defaultRole) {
+        this.defaultRole = defaultRole;
+    }
+
+    public @Nullable List<User> getUsers() {
         return users;
     }
 
@@ -56,8 +68,7 @@ public class FileAuthConfig {
         this.users = users;
     }
 
-    @Nullable
-    public List<Role> getRoles() {
+    public @Nullable List<Role> getRoles() {
         return roles;
     }
 
@@ -65,9 +76,8 @@ public class FileAuthConfig {
         this.roles = roles;
     }
 
-    @NotNull
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "Config{" +
                 "users=" + users +
                 ", roles=" + roles +

@@ -23,37 +23,30 @@ import com.hivemq.extension.sdk.api.annotations.Nullable;
 import javax.xml.bind.annotation.*;
 import java.util.List;
 
-
-@XmlRootElement
 @XmlType(propOrder = {})
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 public class User {
 
-    @Nullable
     @XmlElement(name = "name", required = true)
-    private String name;
+    private @Nullable String name;
 
-    @Nullable
     @XmlElement(name = "password", required = true)
-    private String password;
+    private @Nullable String password;
 
-    @Nullable
-    @XmlElementWrapper(name = "roles")
+    @XmlElementWrapper(name = "roles", required = true)
     @XmlElement(name = "id")
-    private List<String> roles;
-
+    private @Nullable List<String> roles;
 
     public User() {
     }
 
-    public User(@NotNull final String name, @NotNull final String password, @NotNull final List<String> roles) {
+    public User(final @NotNull String name, final @NotNull String password, final @NotNull List<String> roles) {
         this.name = name;
         this.password = password;
         this.roles = roles;
     }
 
-    @Nullable
-    public String getName() {
+    public @Nullable String getName() {
         return name;
     }
 
@@ -61,8 +54,7 @@ public class User {
         this.name = name;
     }
 
-    @Nullable
-    public String getPassword() {
+    public @Nullable String getPassword() {
         return password;
     }
 
@@ -70,8 +62,7 @@ public class User {
         this.password = password;
     }
 
-    @Nullable
-    public List<String> getRoles() {
+    public @Nullable List<String> getRoles() {
         return roles;
     }
 
@@ -79,14 +70,12 @@ public class User {
         this.roles = roles;
     }
 
-    @NotNull
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "User{" +
                 "name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 ", roles=" + roles +
                 '}';
     }
-
 }

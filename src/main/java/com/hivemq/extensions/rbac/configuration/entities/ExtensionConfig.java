@@ -21,18 +21,16 @@ import com.hivemq.extension.sdk.api.annotations.NotNull;
 
 import javax.xml.bind.annotation.*;
 
-
 @XmlRootElement(name = "extension-configuration")
 @XmlType(propOrder = {})
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 public class ExtensionConfig {
 
-    @XmlElement(name = "credentials-reload-interval", required = false, defaultValue = "60")
+    @XmlElement(name = "credentials-reload-interval", defaultValue = "60")
     private int reloadInterval = 60;
 
-    @NotNull
-    @XmlElement(name = "password-type", required = false, defaultValue = "HASHED")
-    private PasswordType passwordType = PasswordType.HASHED;
+    @XmlElement(name = "password-type", defaultValue = "HASHED")
+    private @NotNull PasswordType passwordType = PasswordType.HASHED;
 
     public ExtensionConfig() {
     }
@@ -50,8 +48,7 @@ public class ExtensionConfig {
         this.reloadInterval = reloadInterval;
     }
 
-    @NotNull
-    public PasswordType getPasswordType() {
+    public @NotNull PasswordType getPasswordType() {
         return passwordType;
     }
 
@@ -59,9 +56,8 @@ public class ExtensionConfig {
         this.passwordType = passwordType;
     }
 
-    @NotNull
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return "ExtensionConfiguration{" +
                 "reloadInterval=" + reloadInterval +
                 ", passwordType=" + passwordType +
