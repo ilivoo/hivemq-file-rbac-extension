@@ -46,13 +46,8 @@ public class FileAuthAuthenticator implements SimpleAuthenticator {
         final Optional<ByteBuffer> passwordOptional = simpleAuthInput.getConnectPacket().getPassword();
         final String clientId = simpleAuthInput.getClientInformation().getClientId();
 
-        //check if username and password are present
-        if (userNameOptional.isEmpty() || passwordOptional.isEmpty()) {
-            //client is not authenticated
-            simpleAuthOutput.failAuthentication(ConnackReasonCode.BAD_USER_NAME_OR_PASSWORD, "Authentication failed because username or password are missing");
-            return;
-        }
-        final String userName = userNameOptional.get();
+        final String userName = userNameOptional.orElse(null);
+        final ByteBuffer password = passwordOptional.orElse(null);
 
         //prevent clientIds with MQTT wildcard characters
         if (clientId.contains("#") || clientId.contains("+")) {
@@ -62,7 +57,7 @@ public class FileAuthAuthenticator implements SimpleAuthenticator {
         }
 
         //prevent usernames with MQTT wildcard characters
-        if (userName.contains("#") || userName.contains("+")) {
+        if (userName != null && (userName.contains("#") || userName.contains("+"))) {
             //client is not authenticated
             simpleAuthOutput.failAuthentication(ConnackReasonCode.BAD_USER_NAME_OR_PASSWORD, "The characters '#' and '+' are not allowed in the username");
             return;
@@ -70,7 +65,7 @@ public class FileAuthAuthenticator implements SimpleAuthenticator {
 
 
         //check if we have any roles for username/password combination
-        final List<String> roles = credentialsValidator.getRoles(userName, passwordOptional.get());
+        final List<String> roles = credentialsValidator.getRoles(userName, password);
 
         if (roles == null || roles.isEmpty()) {
             //username/password combination is unknown or has invalid roles

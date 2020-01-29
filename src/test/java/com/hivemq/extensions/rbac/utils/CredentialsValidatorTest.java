@@ -48,6 +48,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 
+@SuppressWarnings("NullabilityAnnotations")
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Builders.class})
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "org.w3c.*"})
@@ -85,6 +86,37 @@ public class CredentialsValidatorTest {
         final List<String> roles2 = validator.getRoles("user2", ByteBuffer.wrap("pass2".getBytes()));
         assertEquals("role1", roles2.get(0));
         assertEquals("role2", roles2.get(1));
+    }
+
+    @Test
+    public void test_valid_default_role() throws Exception {
+        initValidator(PLAIN_CREDENTIALS_WITH_DEFAULT, false);
+        final List<String> roles = validator.getRoles("unknown", ByteBuffer.wrap("pass1".getBytes()));
+        assertEquals("role1", roles.get(0));
+
+        final List<String> roles2 = validator.getRoles("unknown", ByteBuffer.wrap("pass2".getBytes()));
+        assertEquals("role1", roles2.get(0));
+    }
+
+    @Test
+    public void test_invalid_password_no_default_role() throws Exception {
+        initValidator(PLAIN_CREDENTIALS_WITH_DEFAULT, false);
+        final List<String> roles = validator.getRoles("user1", ByteBuffer.wrap("invalid".getBytes()));
+        assertNull(roles);
+    }
+
+    @Test
+    public void test_null_password_no_default_role() throws Exception {
+        initValidator(PLAIN_CREDENTIALS_WITH_DEFAULT, false);
+        final List<String> roles = validator.getRoles("user1", null);
+        assertNull(roles);
+    }
+
+    @Test
+    public void test_password_null_user_null_default_role() throws Exception {
+        initValidator(PLAIN_CREDENTIALS_WITH_DEFAULT, false);
+        final List<String> roles = validator.getRoles(null, null);
+        assertEquals("role1", roles.get(0));
     }
 
     @Test
@@ -146,7 +178,7 @@ public class CredentialsValidatorTest {
         extensionConfig = new ExtensionConfig();
         if (hashed) {
             extensionConfig.setPasswordType(PasswordType.HASHED);
-        }else{
+        } else {
             extensionConfig.setPasswordType(PasswordType.PLAIN);
         }
         homeFolder = temporaryFolder.getRoot();
@@ -160,7 +192,7 @@ public class CredentialsValidatorTest {
         validator.init();
     }
 
-    public static final String ROLES = "    <roles>\n" +
+    private static final String ROLES = "    <roles>\n" +
             "        <role>\n" +
             "            <id>role1</id>\n" +
             "            <permissions>\n" +
@@ -201,6 +233,28 @@ public class CredentialsValidatorTest {
             "</file-rbac>";
 
     private static final String PLAIN_CREDENTIALS = "<file-rbac>" +
+            "   <users>\n" +
+            "        <user>\n" +
+            "            <name>user1</name>\n" +
+            "            <password>pass1</password>\n" +
+            "            <roles>\n" +
+            "                <id>role1</id>\n" +
+            "            </roles>\n" +
+            "        </user>\n" +
+            "        <user>\n" +
+            "            <name>user2</name>\n" +
+            "            <password>pass2</password>\n" +
+            "            <roles>\n" +
+            "                <id>role1</id>\n" +
+            "                <id>role2</id>\n" +
+            "            </roles>\n" +
+            "        </user>\n" +
+            "    </users>\n" +
+            ROLES +
+            "</file-rbac>";
+
+    private static final String PLAIN_CREDENTIALS_WITH_DEFAULT = "<file-rbac>" +
+            "   <default-role>role1</default-role>\n" +
             "   <users>\n" +
             "        <user>\n" +
             "            <name>user1</name>\n" +

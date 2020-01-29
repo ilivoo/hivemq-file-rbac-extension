@@ -62,12 +62,12 @@ public class ConfigCredentialsValidatorTest {
     }
 
     @Test
-    public void test_no_users() {
+    public void test_no_users_no_default_role() {
 
         final FileAuthConfig config = new FileAuthConfig();
         config.setRoles(List.of(new Role("id1", List.of(new Permission("topic")))));
         config.setUsers(null);
-
+        config.setDefaultRole(null);
 
         final ExtensionConfig extensionConfig = new ExtensionConfig();
         final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
@@ -77,7 +77,7 @@ public class ConfigCredentialsValidatorTest {
     }
 
     @Test
-    public void test_empty_users() {
+    public void test_empty_users_no_default_role() {
 
         final FileAuthConfig config = new FileAuthConfig();
         config.setRoles(List.of(new Role("id1", List.of(new Permission("topic")))));
@@ -89,6 +89,21 @@ public class ConfigCredentialsValidatorTest {
 
         assertFalse(result.isValidationSuccessful());
         checkErrorString(result, "No users or default role found in configuration file");
+    }
+
+    @Test
+    public void test_default_role_not_in_roles() {
+
+        final FileAuthConfig config = new FileAuthConfig();
+        config.setRoles(List.of(new Role("id1", List.of(new Permission("topic")))));
+        config.setUsers(null);
+        config.setDefaultRole("id2");
+
+        final ExtensionConfig extensionConfig = new ExtensionConfig();
+        final ValidationResult result = ConfigCredentialsValidator.validateConfig(extensionConfig, config);
+
+        assertFalse(result.isValidationSuccessful());
+        checkErrorString(result, "No role defined for default role 'id2'");
     }
 
     @Test

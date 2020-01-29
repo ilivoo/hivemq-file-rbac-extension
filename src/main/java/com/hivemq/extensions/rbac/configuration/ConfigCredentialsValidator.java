@@ -35,13 +35,13 @@ public class ConfigCredentialsValidator {
 
         final String defaultRole = config.getDefaultRole();
         final List<User> users = config.getUsers();
-        if ((defaultRole == null || defaultRole.isEmpty()) && (users == null || users.isEmpty())) {
+        if ((defaultRole == null || defaultRole.isEmpty()) && users.isEmpty()) {
             errors.add("No users or default role found in configuration file");
             validationSuccessful = false;
         }
 
         final List<Role> roles = config.getRoles();
-        if (roles == null || roles.isEmpty()) {
+        if (roles.isEmpty()) {
             errors.add("No roles found in configuration file");
             validationSuccessful = false;
         }
@@ -105,6 +105,11 @@ public class ConfigCredentialsValidator {
                     validationSuccessful = false;
                 }
             }
+        }
+
+        if (!(defaultRole == null || defaultRole.isEmpty()) && !roleIds.contains(defaultRole)) {
+            errors.add("No role defined for default role '" + defaultRole + "'");
+            validationSuccessful = false;
         }
 
         final Set<String> userNames = new HashSet<>();

@@ -70,18 +70,6 @@ public class FileAuthAuthenticatorTest {
     }
 
     @Test
-    public void test_connect_with_empty_username() {
-        fileAuthAuthenticator.onConnect(new TestInput("client1", null, "pass1"), output);
-        verify(output).failAuthentication(ConnackReasonCode.BAD_USER_NAME_OR_PASSWORD, "Authentication failed because username or password are missing");
-    }
-
-    @Test
-    public void test_connect_with_empty_password() {
-        fileAuthAuthenticator.onConnect(new TestInput("client1", "user1", null), output);
-        verify(output).failAuthentication(ConnackReasonCode.BAD_USER_NAME_OR_PASSWORD, "Authentication failed because username or password are missing");
-    }
-
-    @Test
     public void test_connect_with_wildcard_username() {
         fileAuthAuthenticator.onConnect(new TestInput("client1", "client/#", "pass1"), output);
         verify(output).failAuthentication(ConnackReasonCode.BAD_USER_NAME_OR_PASSWORD, "The characters '#' and '+' are not allowed in the username");

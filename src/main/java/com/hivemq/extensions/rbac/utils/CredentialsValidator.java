@@ -34,19 +34,21 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-@ThreadSafe
 @SuppressWarnings("ConstantConditions")
+@ThreadSafe
 public class CredentialsValidator {
 
     private final @NotNull Configuration configuration;
 
     private final @NotNull ReadWriteLock usersLock = new ReentrantReadWriteLock();
     private final @NotNull ReadWriteLock rolesLock = new ReentrantReadWriteLock();
+    private final @NotNull ReadWriteLock defaultRoleLock = new ReentrantReadWriteLock();
     private final @NotNull ExtensionConfig extensionConfig;
     private final @NotNull CredentialsHasher credentialsHasher;
 
     private @NotNull Map<String, User> users = new ConcurrentHashMap<>();
     private @NotNull Map<String, Role> roles = new ConcurrentHashMap<>();
+    private @Nullable Role defaultRole = null;
 
     public CredentialsValidator(
             final @NotNull Configuration configuration,
@@ -63,11 +65,13 @@ public class CredentialsValidator {
         if (currentConfig != null) {
             updateUsersMap(currentConfig);
             updateRolesMap(currentConfig);
+            updateDefaultRole(currentConfig);
         }
 
         configuration.addReloadCallback((oldConfig, newConfig) -> {
             updateUsersMap(newConfig);
             updateRolesMap(newConfig);
+            updateDefaultRole(newConfig);
         });
     }
 
@@ -76,23 +80,39 @@ public class CredentialsValidator {
      * @param password the password
      * @return a list of the users roles or null if the credentials are not valid
      */
-    public @Nullable List<String> getRoles(final @NotNull String userName, final @NotNull ByteBuffer password) {
+    public @Nullable List<String> getRoles(final @Nullable String userName, final @Nullable ByteBuffer password) {
 
         //If Config is invalid do not allow clients to connect
         if (users.isEmpty() || roles.isEmpty()) {
             return null;
         }
 
-        final Lock readLock = usersLock.readLock();
-        readLock.lock();
+
         final User user;
-        try {
-            user = users.get(userName);
-        } finally {
-            readLock.unlock();
+
+        if (userName != null) {
+            final Lock readLock = usersLock.readLock();
+            readLock.lock();
+            try {
+                user = users.get(userName);
+            } finally {
+                readLock.unlock();
+            }
+        } else {
+            user = null;
         }
 
+        final Lock defaultRoleReadLock = defaultRoleLock.readLock();
+        defaultRoleReadLock.lock();
         if (user == null) {
+            if (defaultRole == null) {
+                return null;
+            } else {
+                return List.of(defaultRole.getId());
+            }
+        }
+
+        if (password == null) {
             return null;
         }
 
@@ -172,6 +192,32 @@ public class CredentialsValidator {
             writeLock.unlock();
         }
     }
+
+    private void updateDefaultRole(final @NotNull FileAuthConfig config) {
+        if (config.getDefaultRole() != null) {
+            final Lock rolesWriteLock = rolesLock.writeLock();
+            rolesWriteLock.lock();
+
+            final Lock defaultRoleWriteLock = defaultRoleLock.writeLock();
+            defaultRoleWriteLock.lock();
+
+            try {
+                this.defaultRole = roles.get(config.getDefaultRole());
+            } finally {
+                defaultRoleWriteLock.unlock();
+                rolesWriteLock.unlock();
+            }
+        } else {
+            final Lock defaultRoleWriteLock = defaultRoleLock.writeLock();
+            defaultRoleWriteLock.lock();
+            try {
+                this.defaultRole = null;
+            } finally {
+                defaultRoleWriteLock.unlock();
+            }
+        }
+    }
+
 
     private @NotNull TopicPermission toTopicPermission(
             final @NotNull String clientId, final @NotNull String userName, final @NotNull Permission permission) {

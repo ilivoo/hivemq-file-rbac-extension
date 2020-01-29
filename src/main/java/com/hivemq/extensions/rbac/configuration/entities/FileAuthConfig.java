@@ -21,6 +21,7 @@ import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.extension.sdk.api.annotations.Nullable;
 
 import javax.xml.bind.annotation.*;
+import java.util.Collections;
 import java.util.List;
 
 @XmlRootElement(name = "file-rbac")
@@ -60,7 +61,10 @@ public class FileAuthConfig {
         this.defaultRole = defaultRole;
     }
 
-    public @Nullable List<User> getUsers() {
+    public @NotNull List<User> getUsers() {
+        if (users == null) {
+            return Collections.emptyList();
+        }
         return users;
     }
 
@@ -68,7 +72,10 @@ public class FileAuthConfig {
         this.users = users;
     }
 
-    public @Nullable List<Role> getRoles() {
+    public @NotNull List<Role> getRoles() {
+        if (roles == null) {
+            return Collections.emptyList();
+        }
         return roles;
     }
 
